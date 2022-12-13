@@ -216,7 +216,39 @@ public class CourseRegTester {
    * @return true if CourseQueue's other methods are implemented correctly; false otherwise
    */
   public static boolean testCourseQueue() {
-    return false; // TODO: complete this test
+    try {
+      CourseQueue queue = new CourseQueue(-1);
+      return false;
+    } catch (IllegalArgumentException e) {
+    }
+
+    try {
+      CourseQueue queue = new CourseQueue(0);
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+
+    CourseQueue queue = new CourseQueue(5);
+
+    if (!queue.isEmpty()) {
+      return false;
+    }
+
+    if (queue.size() != 0) {
+      return false;
+    }
+
+    Course course1 = new Course("CS", 300, 3, 10);
+
+    queue.enqueue(course1);
+
+    if (!queue.peek().equals(course1)) {
+      return false;
+    }
+
+    // TODO Rest of the tester
+
+    return true; // No bug detected
   }
 
   /**

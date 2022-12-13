@@ -23,7 +23,12 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws IllegalArgumentException if the capacity is not a positive integer
    */
   public CourseQueue(int capacity) {
-    // TODO complete this constructor, initializing ALL data fields
+    if (capacity < 0) {
+      throw new IllegalArgumentException("The capacity is not a positive integer.");
+    }
+
+    queue = new Course[capacity];
+    size = 0;
   }
 
   /**
@@ -34,8 +39,15 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @return a deep copy of this CourseQueue, which has the same capacity and size as this queue.
    */
   public CourseQueue deepCopy() {
-    // TODO complete this method according to its description
-    return null;
+    CourseQueue copy = new CourseQueue(this.queue.length);
+    copy.size = this.size;
+
+    int i = 0;
+    for (var v : this.queue) {
+      copy.queue[i++] = v;
+    }
+
+    return copy;
   }
 
   /**
@@ -48,8 +60,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    */
   @Override
   public Iterator<Course> iterator() {
-    // TODO complete this method according to its description
-    return null;
+    return new CourseIterator(this);
   }
 
   ///////////////////////////// TODO: PRIORITY QUEUE METHODS //////////////////////////////////
@@ -61,7 +72,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @return {@code true} if this CourseQueue is empty
    */
   public boolean isEmpty() {
-    return false; // TODO complete this method
+    return this.size == 0;
   }
 
   /**
@@ -70,7 +81,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @return the size of this CourseQueue
    */
   public int size() {
-    return -1; // TODO complete this method
+    return this.size;
   }
 
   /**
@@ -83,7 +94,17 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws IllegalStateException with a descriptive error message if this CourseQueue is full
    */
   public void enqueue(Course toAdd) throws NullPointerException, IllegalStateException {
-    // TODO complete this method
+    if (toAdd == null) {
+      throw new NullPointerException("The given Course is null.");
+    }
+
+    if (this.size == this.queue.length) {
+      throw new IllegalStateException("This CourseQueue is full.");
+    }
+
+    this.queue[size] = toAdd;
+    percolateUp(size);
+    this.size++;
   }
 
   /**
@@ -95,7 +116,16 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws NoSuchElementException with a descriptive error message if this CourseQueue is empty
    */
   public Course dequeue() throws NoSuchElementException {
-    return null; // TODO complete this method
+    if (this.size == 0) {
+      throw new NoSuchElementException("This CourseQueue is empty.");
+    }
+
+    Course temp = queue[0];
+
+    queue[0] = null;
+    percolateDown(0);
+
+    return temp;
   }
 
   /**
@@ -105,7 +135,10 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws NoSuchElementException if this CourseQueue is empty
    */
   public Course peek() throws NoSuchElementException {
-    return null; // TODO complete this method
+    if (this.size == 0) {
+      throw new NoSuchElementException("This CourseQueue is empty.");
+    }
+    return this.queue[0];
   }
 
   ///////////////////////////// TODO: QUEUE HELPER METHODS //////////////////////////////////
@@ -124,7 +157,35 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws IndexOutOfBoundsException if index is out of bounds - do not catch the exception
    */
   protected void percolateDown(int index) throws IndexOutOfBoundsException {
-    // TODO complete this method
+    if (index < 0 || index > size) {
+      throw new IndexOutOfBoundsException("The index is out of bounds.");
+    }
+
+    int childIndex = 2 * index + 1;
+    Course value = queue[index];
+
+    while (childIndex < this.size) {
+      Course maxValue = value;
+      int maxIndex = -1;
+      for (int i = 0; i < 2 && i + childIndex < this.size; i++) {
+        if (queue[i + childIndex].compareTo(maxValue) > 0) {
+          maxValue = queue[i + childIndex];
+          maxIndex = i + childIndex;
+        }
+      }
+
+      if (maxValue == value) {
+        return;
+      } else {
+        Course temp = queue[index];
+
+        queue[index] = queue[maxIndex];
+        queue[maxIndex] = temp;
+
+        index = maxIndex;
+        childIndex = 2 * index + 1;
+      }
+    }
   }
 
   /**
@@ -141,7 +202,22 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws IndexOutOfBoundsException if index is out of bounds - do not catch the exception
    */
   protected void percolateUp(int index) throws IndexOutOfBoundsException {
-    // TODO complete this method
+    if (index < 0 || index > size) {
+      throw new IndexOutOfBoundsException("The index is out of bounds.");
+    }
+
+    while (index > 0) {
+      int parentIndex = (index - 1) / 2;
+      if (queue[index].compareTo(queue[parentIndex]) <= 0) {
+        return;
+      } else {
+        Course temp = queue[index];
+
+        queue[index] = queue[parentIndex];
+        queue[parentIndex] = temp;
+        index = parentIndex;
+      }
+    }
   }
 
   ////////////////////////////// PROVIDED: TO STRING ////////////////////////////////////

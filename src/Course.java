@@ -32,8 +32,7 @@ public class Course implements Comparable<Course> {
   public Course(String deptName, int courseNum, int numCredits, int seats) {
     if (deptName == null || deptName.isEmpty() || deptName.isBlank() || courseNum <= 0
         || numCredits < 1 || numCredits > 5 || seats < 0) {
-      throw new IllegalArgumentException(
-          "One of the arguments do not fulfill their requirements for Course constructor.");
+      throw new IllegalArgumentException("One of the arguments do not fulfill their requirements.");
     }
 
     this.DEPT_NAME = deptName;

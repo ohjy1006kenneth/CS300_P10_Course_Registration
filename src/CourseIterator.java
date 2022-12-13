@@ -8,18 +8,18 @@ import java.util.NoSuchElementException;
  * priority to lowest.
  */
 public class CourseIterator implements Iterator<Course> {
-  
+
   // data field - you may NOT add any additional data fields to this class!
   private CourseQueue queue; // a DEEP COPY of the priority queue of courses to iterate over
-  
+
   /**
-   * Creates a new CourseIterator which iterates over the elements of the given CourseQueue
-   * in order from the highest-priority course to the lowest-priority course
+   * Creates a new CourseIterator which iterates over the elements of the given CourseQueue in order
+   * from the highest-priority course to the lowest-priority course
    * 
    * @param queue a DEEP COPY of the queue to iterate over
    */
   public CourseIterator(CourseQueue queue) {
-    
+    this.queue = queue;
   }
 
   /**
@@ -29,21 +29,23 @@ public class CourseIterator implements Iterator<Course> {
    */
   @Override
   public boolean hasNext() {
-    // TODO Auto-generated method stub
-    return false;
+    return this.queue.size() > 0;
   }
 
   /**
-   * Returns the next element in the iteration. Consider how to use the priority queue's methods
-   * to get the next course in descending order.
+   * Returns the next element in the iteration. Consider how to use the priority queue's methods to
+   * get the next course in descending order.
    * 
    * @return the next element in the iteration
    * @throws NoSuchElementException if the iteration has no more elements
    */
   @Override
   public Course next() throws NoSuchElementException {
-    // TODO Auto-generated method stub
-    return null;
+    if (queue.size() == 0) {
+      throw new NoSuchElementException("The Iteration has no more elements.");
+
+    }
+    return this.queue.dequeue();
   }
 
 }
