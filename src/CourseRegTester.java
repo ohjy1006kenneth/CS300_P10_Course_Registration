@@ -1,4 +1,31 @@
-// TODO file header
+import java.util.NoSuchElementException;
+
+//////////////// FILE HEADER (INCLUDE IN EVERY FILE) //////////////////////////
+//
+// Title: P10
+// Course: CS 300 Fall 2022
+//
+// Author: Kenneth Oh
+// Email: oh87@wisc.edu
+// Lecturer: Jeff Nyhoff
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ///////////////////
+//
+// Partner Name: NONE
+// Partner Email: NONE
+// Partner Lecturer's Name: NONE
+//
+// VERIFY THE FOLLOWING BY PLACING AN X NEXT TO EACH TRUE STATEMENT:
+// _X__ Write-up states that pair programming is allowed for this assignment.
+// __X_ We have both read and understand the course Pair Programming Policy.
+// __X_ We have registered our team prior to the team registration deadline.
+//
+///////////////////////// ALWAYS CREDIT OUTSIDE HELP //////////////////////////
+//
+// Persons: NONE
+// Online Sources: NONE
+//
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * This class implements unit test methods to check the correctness of Course, CourseIterator,
@@ -21,7 +48,7 @@ public class CourseRegTester {
   public static boolean testCourse() {
     // Check constructor
     try {
-      Course course = new Course("", 300, 3, 10);
+      Course course = new Course(" ", 300, 3, 10);
       return false;
     } catch (IllegalArgumentException e) {
     }
@@ -82,13 +109,12 @@ public class CourseRegTester {
     } catch (IllegalArgumentException e) {
     }
 
-    course.setProfessor("Professor1", 5);
-
-    try {
-      course.setProfessor(null, 0);
-    } catch (IllegalArgumentException e) {
+    course.setProfessor(null, 5.0);
+    if (!course.toString().equals("CS 300 (10 seats)")) {
       return false;
     }
+
+    course.setProfessor("Professor1", 5);
 
     try {
       course.setSeatsAvailable(-1);
@@ -140,8 +166,8 @@ public class CourseRegTester {
     }
 
     // Second level of the comparison
-    big = new Course("CS", 300, 3, 10);
-    small = new Course("CS", 300, 3, 0);
+    big = new Course("MATH", 300, 3, 10);
+    small = new Course("MATH", 300, 3, 0);
     if (big.compareTo(small) <= 0) {
       return false;
     }
@@ -224,8 +250,8 @@ public class CourseRegTester {
 
     try {
       CourseQueue queue = new CourseQueue(0);
-    } catch (IllegalArgumentException e) {
       return false;
+    } catch (IllegalArgumentException e) {
     }
 
     CourseQueue queue = new CourseQueue(5);
@@ -239,14 +265,21 @@ public class CourseRegTester {
     }
 
     Course course1 = new Course("CS", 300, 3, 10);
+    Course course2 = new Course("MATH", 221, 5, 0);
+    Course course3 = new Course("MATH", 222, 4, 0);
+    Course course4 = new Course("CHEM", 103, 5, 10);
+    Course course5 = new Course("ECON", 101, 4, 10);
+    course4.setProfessor("Professor1", 5.0);
 
     queue.enqueue(course1);
+    queue.enqueue(course2);
+    queue.enqueue(course3);
+    queue.enqueue(course4);
+    queue.enqueue(course5);
 
-    if (!queue.peek().equals(course1)) {
+    if (!queue.peek().equals(course1) || queue.isEmpty() || queue.size() != 5) {
       return false;
     }
-
-    // TODO Rest of the tester
 
     return true; // No bug detected
   }
@@ -265,7 +298,86 @@ public class CourseRegTester {
    * @return true if the CourseQueue enqueue/dequeue implementations are correct; false otherwise
    */
   public static boolean testEnqueueDequeue() {
-    return false; // TODO: complete this test
+    CourseQueue queue = new CourseQueue(4);
+
+    Course course1 = new Course("CS", 300, 3, 10);
+    Course course2 = new Course("CS", 221, 5, 0);
+    Course course3 = new Course("MATH", 222, 4, 0);
+    Course course4 = new Course("MATH", 223, 4, 10);
+
+    try {
+      queue.enqueue(null);
+      return false;
+    } catch (NullPointerException e) {
+    } catch (Exception e) {
+      return false;
+    }
+
+    try {
+      queue.enqueue(course1);
+      if (!queue.peek().equals(course1)) {
+        return false;
+      }
+      queue.enqueue(course2);
+      if (!queue.peek().equals(course1)) {
+        return false;
+      }
+      queue.enqueue(course3);
+      if (!queue.peek().equals(course1)) {
+        return false;
+      }
+      queue.enqueue(course4);
+      if (!queue.peek().equals(course1)) {
+        return false;
+      }
+    } catch (Exception e) {
+      return false;
+    }
+
+    try {
+      queue.enqueue(course1);
+      return false;
+    } catch (IllegalStateException e) {
+    } catch (Exception e) {
+      return false;
+    }
+
+
+    if (queue.size() != 4) {
+      return false;
+    }
+
+    try {
+      if (!queue.dequeue().equals(course1) || queue.size() != 3 || queue.isEmpty()) {
+        System.out.println(1);
+        return false;
+      }
+
+      if (!queue.dequeue().equals(course2) || queue.size() != 2 || queue.isEmpty()) {
+        System.out.println(2);
+        return false;
+      }
+
+      if (!queue.dequeue().equals(course3) || queue.size() != 1 || queue.isEmpty()) {
+        return false;
+      }
+
+      if (!queue.dequeue().equals(course2) || queue.size() != 0 || !queue.isEmpty()) {
+        return false;
+      }
+    } catch (Exception e) {
+      return false;
+    }
+
+    try {
+      queue.dequeue();
+      return false;
+    } catch (NoSuchElementException e) {
+    } catch (Exception e) {
+      return false;
+    }
+
+    return true; // No bug detected
   }
 
   /**
@@ -280,7 +392,47 @@ public class CourseRegTester {
    * @return true if the CourseIterator implementation is correct; false otherwise
    */
   public static boolean testCourseIterator() {
-    return false; // TODO: complete this test
+    CourseQueue queue = new CourseQueue(3);
+    var itr = queue.iterator();
+
+    if (itr.hasNext()) {
+      return false;
+    }
+
+    Course course1 = new Course("CS", 300, 3, 10);
+    Course course2 = new Course("MATH", 221, 5, 10);
+    Course course3 = new Course("MATH", 222, 4, 0);
+
+    queue.enqueue(course1);
+    queue.enqueue(course2);
+    queue.enqueue(course3);
+
+    itr = queue.iterator();
+    if (!itr.hasNext()) {
+      return false;
+    }
+
+    if (!itr.next().equals(course1)) {
+      return false;
+    }
+
+    if (!itr.next().equals(course2)) {
+      return false;
+    }
+
+    if (!itr.next().equals(course3)) {
+      return false;
+    }
+
+    try {
+      itr.next();
+      return false;
+    } catch (NoSuchElementException e) {
+    } catch (Exception e) {
+      return false;
+    }
+
+    return true; // No bug detected
   }
 
   /**
@@ -295,7 +447,73 @@ public class CourseRegTester {
    * @return true if CourseReg has been implemented correctly; false otherwise
    */
   public static boolean testCourseReg() {
-    return false; // TODO: complete this test
+    try {
+      CourseReg cr = new CourseReg(-1, 0);
+      System.out.println(1);
+      return false;
+    } catch (IllegalArgumentException e) {
+    }
+
+    CourseReg cr = new CourseReg(5, 16);
+
+    Course course1 = new Course("CS", 300, 3, 10);
+    Course course2 = new Course("MATH", 221, 5, 0);
+    Course course3 = new Course("MATH", 222, 4, 0);
+    Course course4 = new Course("CHEM", 103, 4, 10);
+    Course course5 = new Course("ECON", 101, 4, 10);
+    Course course6 = new Course("ECE", 252, 3, 10);
+    course4.setProfessor("Professor1", 5.0);
+
+    if (!cr.add(course1)) {
+      System.out.println(2);
+      return false;
+    }
+    if (!cr.add(course2)) {
+      System.out.println(3);
+      return false;
+    }
+    if (!cr.add(course3)) {
+      System.out.println(4);
+      return false;
+    }
+    if (!cr.add(course4)) {
+      System.out.println(5);
+      return false;
+    }
+    if (!cr.add(course5)) {
+      System.out.println(6);
+      return false;
+    }
+
+    if (cr.add(course6)) {
+      return false;
+    }
+
+    if (!cr.getRecommendedCourses().equals(
+        "CS 300 (10 seats)\nCHEM 103 (10 seats) with Professor1 (5.0)\nECON 101 (10 seats)\nMATH 222 (closed)\n")) {
+      return false;
+    }
+
+    try {
+      cr.setCreditLoad(0);
+      return false;
+    } catch (IllegalArgumentException e) {
+    }
+
+    try {
+      cr.setCreditLoad(-1);
+      return false;
+    } catch (IllegalArgumentException e) {
+    }
+
+    cr.setCreditLoad(21);
+
+    if (!cr.getRecommendedCourses().equals(
+        "CS 300 (10 seats)\nCHEM 103 (10 seats) with Professor1 (5.0)\nECON 101 (10 seats)\nMATH 222 (closed)\nMATH 221 (closed)\n")) {
+      return false;
+    }
+
+    return true; // No bug detected
   }
 
   /**

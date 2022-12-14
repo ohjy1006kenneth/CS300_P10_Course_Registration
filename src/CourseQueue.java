@@ -1,4 +1,29 @@
-// TODO file header
+//////////////// FILE HEADER (INCLUDE IN EVERY FILE) //////////////////////////
+//
+// Title: P10
+// Course: CS 300 Fall 2022
+//
+// Author: Kenneth Oh
+// Email: oh87@wisc.edu
+// Lecturer: Jeff Nyhoff
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ///////////////////
+//
+// Partner Name: NONE
+// Partner Email: NONE
+// Partner Lecturer's Name: NONE
+//
+// VERIFY THE FOLLOWING BY PLACING AN X NEXT TO EACH TRUE STATEMENT:
+// _X__ Write-up states that pair programming is allowed for this assignment.
+// __X_ We have both read and understand the course Pair Programming Policy.
+// __X_ We have registered our team prior to the team registration deadline.
+//
+///////////////////////// ALWAYS CREDIT OUTSIDE HELP //////////////////////////
+//
+// Persons: NONE
+// Online Sources: NONE
+//
+///////////////////////////////////////////////////////////////////////////////
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -23,7 +48,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws IllegalArgumentException if the capacity is not a positive integer
    */
   public CourseQueue(int capacity) {
-    if (capacity < 0) {
+    if (capacity <= 0) {
       throw new IllegalArgumentException("The capacity is not a positive integer.");
     }
 
@@ -71,6 +96,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * 
    * @return {@code true} if this CourseQueue is empty
    */
+  @Override
   public boolean isEmpty() {
     return this.size == 0;
   }
@@ -80,6 +106,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * 
    * @return the size of this CourseQueue
    */
+  @Override
   public int size() {
     return this.size;
   }
@@ -93,6 +120,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @throws NullPointerException  if the given Course is null
    * @throws IllegalStateException with a descriptive error message if this CourseQueue is full
    */
+  @Override
   public void enqueue(Course toAdd) throws NullPointerException, IllegalStateException {
     if (toAdd == null) {
       throw new NullPointerException("The given Course is null.");
@@ -102,9 +130,8 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
       throw new IllegalStateException("This CourseQueue is full.");
     }
 
-    this.queue[size] = toAdd;
-    percolateUp(size);
-    this.size++;
+    this.queue[size++] = toAdd;
+    percolateUp(size - 1);
   }
 
   /**
@@ -115,6 +142,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @return the Course in this CourseQueue with the highest priority
    * @throws NoSuchElementException with a descriptive error message if this CourseQueue is empty
    */
+  @Override
   public Course dequeue() throws NoSuchElementException {
     if (this.size == 0) {
       throw new NoSuchElementException("This CourseQueue is empty.");
@@ -122,7 +150,9 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
 
     Course temp = queue[0];
 
-    queue[0] = null;
+    queue[0] = queue[size - 1];
+    queue[size - 1] = null;
+    size--;
     percolateDown(0);
 
     return temp;
@@ -134,6 +164,7 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
    * @return the Course in this CourseQueue with the highest priority
    * @throws NoSuchElementException if this CourseQueue is empty
    */
+  @Override
   public Course peek() throws NoSuchElementException {
     if (this.size == 0) {
       throw new NoSuchElementException("This CourseQueue is empty.");
@@ -160,7 +191,6 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException("The index is out of bounds.");
     }
-
     int childIndex = 2 * index + 1;
     Course value = queue[index];
 
@@ -205,7 +235,6 @@ public class CourseQueue implements Iterable<Course>, PriorityQueueADT<Course> {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException("The index is out of bounds.");
     }
-
     while (index > 0) {
       int parentIndex = (index - 1) / 2;
       if (queue[index].compareTo(queue[parentIndex]) <= 0) {

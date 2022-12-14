@@ -1,4 +1,30 @@
-// TODO file header
+//////////////// FILE HEADER (INCLUDE IN EVERY FILE) //////////////////////////
+//
+// Title: P10
+// Course: CS 300 Fall 2022
+//
+// Author: Kenneth Oh
+// Email: oh87@wisc.edu
+// Lecturer: Jeff Nyhoff
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ///////////////////
+//
+// Partner Name: NONE
+// Partner Email: NONE
+// Partner Lecturer's Name: NONE
+//
+// VERIFY THE FOLLOWING BY PLACING AN X NEXT TO EACH TRUE STATEMENT:
+// _X__ Write-up states that pair programming is allowed for this assignment.
+// __X_ We have both read and understand the course Pair Programming Policy.
+// __X_ We have registered our team prior to the team registration deadline.
+//
+///////////////////////// ALWAYS CREDIT OUTSIDE HELP //////////////////////////
+//
+// Persons: NONE
+// Online Sources: NONE
+//
+///////////////////////////////////////////////////////////////////////////////
+
 
 /**
  * This class models a university-level course. It contains all relevant information for displaying
@@ -120,10 +146,10 @@ public class Course implements Comparable<Course> {
     }
 
     if (profName == null) {
-    } else {
-      this.profName = profName;
-      this.profRating = rating;
+      return;
     }
+    this.profName = profName;
+    this.profRating = rating;
   }
 
   /**
@@ -168,20 +194,14 @@ public class Course implements Comparable<Course> {
   @Override
   public int compareTo(Course otherCourse) {
     // 1. Course in the MAJOR_DEPT are higher priority than courses not in MAJOR_DEPT
-    if (this.DEPT_NAME != MAJOR_DEPT && otherCourse.DEPT_NAME != MAJOR_DEPT) {
-      return 0;
-    }
-    if (this.DEPT_NAME == MAJOR_DEPT && otherCourse.DEPT_NAME != MAJOR_DEPT) {
+    if (this.DEPT_NAME.equals(MAJOR_DEPT) && !otherCourse.DEPT_NAME.equals(MAJOR_DEPT)) {
       return 1;
     }
-    if (this.DEPT_NAME != MAJOR_DEPT && otherCourse.DEPT_NAME == MAJOR_DEPT) {
+    if (!this.DEPT_NAME.equals(MAJOR_DEPT) && otherCourse.DEPT_NAME.equals(MAJOR_DEPT)) {
       return -1;
     }
 
     // 2. Courses with seats available are higher priority than courses with no seats available
-    if (this.numSeatsAvailable == 0 && otherCourse.numSeatsAvailable == 0) {
-      return 0;
-    }
     if (this.numSeatsAvailable > 0 && otherCourse.numSeatsAvailable == 0) {
       return 1;
     }
@@ -190,9 +210,6 @@ public class Course implements Comparable<Course> {
     }
 
     // 3. Courses with KNOWN professors are higher priority than courses without known professors
-    if (this.profName == null && otherCourse.profName == null) {
-      return 0;
-    }
     if (this.profName != null && otherCourse.profName == null) {
       return 1;
     }
